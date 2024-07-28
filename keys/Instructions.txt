@@ -1,24 +1,24 @@
-1. Отредачить хосты
+1. ホストの編集
 sudo nano /etc/hosts
-127.0.0.1       sipacker.test
-между айпи и доменом ТАБ
+127.0.0.1 sipacker.test
+IP ドメインと TAB ドメインの間
 
-2. Заходим в папку keys в этом репозитории
-cd keys
+2. このリポジトリのkeysフォルダに移動します。
+CDキー
 
-3. Создаем свой корневой центр
-openssl req -x509 -newkey rsa:2048 -out existing/SIPackerCA.cer -outform PEM -keyout existing/SIPackerCA.pvk -days 398 -verbose -config SIPackerCA.cnf -nodes -sha256 -subj "/CN=SIPacker CA"
+3. ルートセンターを作成します
+openssl req -x509 -newkey rsa:2048 -outexisting/SIPackerCA.cer -outform PEM -keyoutexisting/SIPackerCA.pvk -days 398 -verbose -config SIPackerCA.cnf -nodes -sha256 -subj "/CN=SIPacker CA"
 
-4. Создаем ключ
-openssl req -newkey rsa:2048 -keyout existing/SIPackerLocalhost.pvk -out existing/SIPackerLocalhost.req -subj /CN=sipacker.test -sha256 -nodes
+4. キーを作成する
+openssl req -newkey rsa:2048 -keyout 既存/SIPackerLocalhost.pvk -out 既存/SIPackerLocalhost.req -subj /CN=sipacker.test -sha256 -nodes
 
-5. Создаем сертификат и подписываем его
-openssl x509 -req -CA existing/SIPackerCA.cer -CAkey existing/SIPackerCA.pvk -in existing/SIPackerLocalhost.req -out existing/SIPackerLocalhost.cer -days 398 -extfile SIPackerLocalhost.ext -sha256 -set_serial 0x1111
+5. 証明書を作成して署名する
+openssl x509 -req -CA 既存/SIPackerCA.cer -CAkey 既存/SIPackerCA.pvk -in 既存/SIPackerLocalhost.req -out 既存/SIPackerLocalhost.cer -days 398 -extfile SIPackerLocalhost.ext -sha256 -set_serial 0x1111
 
-6. Включаем сервер
-cd ../build
+6. サーバーの電源を入れます
+cd ../ビルド
 http-server -S -C ../keys/existing/SIPackerLocalhost.cer -K ../keys/existing/SIPackerLocalhost.pvk
 
-7. Устанавливаем сертификат existing/SIPackerCA.cer в ОС и ставим в настройках ключей доверие ему
+7. 既存の/SIPackerCA.cer 証明書を OS にインストールし、キー設定で信頼されるように設定します。
 
-8. При необходимости удалить или обновить сертификат удаляем все из папки existing, но не удаляем два файла cnf и ext из этой папки и начинаем с 1 пункта
+8. 証明書を削除または更新する必要がある場合は、既存のフォルダーからすべてを削除します。ただし、このフォルダーから cnf および ext の 2 つのファイルは削除せず、ポイント 1 から開始してください。
